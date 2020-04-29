@@ -1,0 +1,39 @@
+" 操作系
+set backspace=indent,eol,start " バックスペースを有効化
+set mouse=a " マウス操作を有効化
+
+" 情報表示系
+set number " 行番号を表示する
+
+" 色系
+syntax enable " シンタックスハイライトの有効化
+" set cursorline " カーソル行ハイライト
+colorscheme tender " カラーテーマ
+
+
+set scrolloff=5 " スクロールの余行設定
+
+
+set expandtab " タブ入力を複数の空白入力に置き換える
+set tabstop=2 " 画面上でタブ文字が占める幅
+set softtabstop=4 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
+set autoindent " 改行時に前の行のインデントを継続する
+set smartindent " 改行時に前の行の構文をチェックし次の行のインデントを増減する
+set shiftwidth=2 " smartindentで増減する幅
+
+set clipboard+=unnamed " ヤンクしたものをクリップボードにコピー
+
+" 検索系
+set hlsearch "検索結果をハイライト
+set incsearch
+set ignorecase "検索パターンにおいて大文字と小文字を区別しない
+set smartcase "検索パターンが大文字を含んでいたらignorecaseを上書きする
+
+" ステータスライン
+set statusline=%f\ %n\ %m
+set statusline+=%=
+set statusline+=[%l/%L][%{has('multi_byte')&&\&fileencoding!=''?&fileencoding:&encoding}]
+
+" encording 設定
+set encoding=utf-8
+set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
