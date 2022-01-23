@@ -1,0 +1,1 @@
+nnoremap sfb :BuffergatorOpen<CR>

@@ -1,5 +1,5 @@
 " NERDTree config
-nnoremap sft :NERDTreeToggle<CR>
+nnoremap sfu :NERDTreeToggle<CR>
 
 " comment out config
 let g:NERDDefaultAlign='left'

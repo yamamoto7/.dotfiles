@@ -1,0 +1,15 @@
+#pecoの設定
+peco-select-history() {
+    declare l=$(HISTTIMEFORMAT= history | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$READLINE_LINE")
+    READLINE_LINE="$l"
+    READLINE_POINT=${#l}
+  if [ -n "$l" ] ; then
+    history -s $l
+
+    if type osascript > /dev/null 2>&1 ; then
+      (osascript -e 'tell application "System Events" to keystroke (ASCII character 30)' &)
+    fi
+  fi
+    history -d $((HISTCMD-1))
+}
+bind -x '"\C-r": peco-select-history'

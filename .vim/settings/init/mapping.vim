@@ -32,6 +32,9 @@ noremap l <SPACE>
 " ヤンクせずにdelete
 noremap <SPACE>d "_d
 
-" syntax highlight
-autocmd FileType vue syntax sync fromstart
-autocmd BufNewFile,BufRead *.jbuilder set filetype=ruby
+" Disable `ctrl + z`
+noremap <C-z> <nop>
+
+" Disable `s`
+noremap s <nop>
+

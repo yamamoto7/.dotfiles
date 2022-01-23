@@ -14,17 +14,59 @@ if exists("syntax_on")
 endif
 let g:colors_name="tender"
 
-hi ColorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE
-hi CursorColumn guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE
-hi CursorLine guifg=NONE ctermfg=NONE guibg=#323232 ctermbg=236 gui=NONE cterm=NONE
-hi CursorLineNr guifg=#73cef4 ctermfg=81 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+" call s:HL('VertSplit', s:bg, s:bg)
+
+function! Highlight(group, fg, bg, style)
+  exec "hi " . a:group
+        \ . " ctermfg=" . a:fg["cterm"]
+        \ . " ctermbg=" . a:bg["cterm"]
+        \ . " cterm=" . a:style["cterm"]
+        \ . " guifg=" . a:fg["gui"]
+        \ . " guibg=" . a:bg["gui"]
+        \ . " gui=" . a:style["gui"]
+endfunction
+
+let s:yellow = { "cterm": 228, "gui": "#ffff87" }
+let s:purple = { "cterm": 141, "gui": "#af87ff" }
+let s:light_green = { "cterm": 148, "gui": "#A4E400" }
+let s:light_blue = { "cterm": 81, "gui": "#62D8F1" }
+let s:magenta = { "cterm": 197, "gui": "#FC1A70" }
+let s:orange = { "cterm": 208, "gui": "#FF9700" }
+
+let s:bg = { "cterm": 236, "gui": "#323232" }
+let s:fg = { "cterm": 231, "gui": "#ffffff" }
+
+let s:white = { "cterm": 231, "gui": "#ffffff" }
+let s:light_grey = { "cterm": 250, "gui": "#bcbcbc" }
+let s:grey = { "cterm": 245, "gui": "#8a8a8a" }
+let s:dark_grey = { "cterm": 59, "gui": "#5f5f5f" }
+let s:darker_grey = { "cterm": 238, "gui": "#444444" }
+let s:charcoal = { "cterm": 235, "gui": "#262626" }
+let s:danger = { "cterm": 197, "gui": "#ff005f" }
+let s:olive = { "cterm": 64, "gui": "#5f8700" }
+let s:dark_red = { "cterm": 88, "gui": "#870000" }
+let s:blood_red = { "cterm": 52, "gui": "#5f0000" }
+let s:dark_green = { "cterm": 22, "gui": "#005f00" }
+let s:light_sea_blue = { "cterm": 33, "gui": "#0087ff" }
+let s:sea_blue = { "cterm": 25, "gui": "#005faf" }
+
+let s:none = { "cterm": "NONE", "gui": "NONE" }
+let s:bold = { "cterm": "bold", "gui": "bold" }
+let s:underline = { "cterm": "underline", "gui": "underline" }
+let s:bold_underline = { "cterm": "bold,underline", "gui": "bold,underline" }
+
+call Highlight("ColorColumn", s:none, s:bg, s:none)
+call Highlight("SignColumn", s:none, s:bg, s:none)
+call Highlight("CursorColumn", s:none, s:bg, s:none)
+call Highlight("CursorLine", s:none, s:darker_grey, s:none)
+call Highlight("CursorLineNr", s:light_blue, s:grey, s:none)
 hi Directory guifg=#b3deef ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi DiffAdd guifg=NONE ctermfg=NONE guibg=#464632 ctermbg=238 gui=NONE cterm=NONE
 hi DiffChange guifg=NONE ctermfg=NONE guibg=#335261 ctermbg=239 gui=NONE cterm=NONE
 hi DiffDelete guifg=#f43753 ctermfg=203 guibg=#79313c ctermbg=237 gui=NONE cterm=NONE
 hi DiffText guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=reverse cterm=reverse
 hi ErrorMsg guifg=#f43753 ctermfg=203 guibg=NONE ctermbg=NONE gui=reverse cterm=reverse
-hi VertSplit guifg=#282828 ctermfg=235 guibg=#282828 ctermbg=235 gui=NONE cterm=NONE
+call Highlight("VertSplit", s:dark_grey, s:none, s:none)
 hi Folded guifg=#666666 ctermfg=242 guibg=#1d1d1d ctermbg=234 gui=NONE cterm=NONE
 hi FoldColumn guifg=#666666 ctermfg=242 guibg=#1d1d1d ctermbg=234 gui=NONE cterm=NONE
 hi IncSearch guifg=#282828 ctermfg=235 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE

@@ -1,0 +1,99 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+
+[user]
+	name = yamamoto kenta
+	email = yamamoto7.pgming@gmail.com
+  signingkey = PUB_KEY
+
+[core]
+	excludesfile = ~/.gitignore_global
+
+[merge]
+	ff = false
+
+[pull]
+	ff = only
+
+[alias]
+	l = log --pretty=oneline -n 20 --graph --abbrev-commit
+	s = status -s
+	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+	p = !"git pull; git submodule foreach git pull origin master"
+	c = clone --recursive
+	ca = !git add -A && git commit -av
+	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+	tags = tag -l
+	branches = branch -a
+	remotes = remote -v
+	aliases = config --get-regexp alias
+	amend = commit --amend --reuse-message=HEAD
+	credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
+	reb = "!r() { git rebase -i HEAD~$1; }; r"
+	retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
+	fb = "!f() { git branch -a --contains $1; }; f"
+	ft = "!f() { git describe --always --contains $1; }; f"
+	fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+	fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+	contributors = shortlog --summary --numbered
+	mpr = "!f() { \
+		declare currentBranch=\"$(git symbolic-ref --short HEAD)\"; \
+		declare branch=\"${2:-$currentBranch}\"; \
+		if [ $(printf \"%s\" \"$1\" | grep '^[0-9]\\+$' > /dev/null; printf $?) -eq 0 ]; then \
+			git fetch origin refs/pull/$1/head:pr/$1 && \
+			git checkout -B $branch && \
+			git rebase $branch pr/$1 && \
+			git checkout -B $branch && \
+			git merge pr/$1 && \
+			git branch -D pr/$1 && \
+			git commit --amend -m \"$(git log -1 --pretty=%B)\n\nCloses #$1.\"; \
+		fi \
+	}; f"
+
+[apply]
+	whitespace = fix
+
+[color]
+	ui = auto
+
+[color "branch"]
+
+	current = cyan bold
+	local = yellow
+	remote = green
+
+[color "diff"]
+
+	meta = yellow bold
+	frag = magenta bold # line info
+	old = red # deletions
+	new = green # additions
+
+[color "status"]
+
+	added = cyan
+	changed = red
+	untracked = magenta
+
+[commit]
+  gpgsign = true
+
+[diff]
+	renames = copies
+
+[diff "bin"]
+	textconv = hexdump -v -C
+
+[diff "sjis"]
+	textconv = iconv -f sjis
+
+[gpg]
+  program = PATH
+
+[diff "mixed"]
+	textconv = nkf -w8

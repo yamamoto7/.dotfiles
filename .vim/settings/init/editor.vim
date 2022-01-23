@@ -1,3 +1,5 @@
+set autoread
+set ambiwidth=double
 " 操作系
 set backspace=indent,eol,start " バックスペースを有効化
 set mouse=a " マウス操作を有効化
@@ -14,9 +16,9 @@ colorscheme tender " カラーテーマ
 set scrolloff=5 " スクロールの余行設定
 
 
-set expandtab " タブ入力を複数の空白入力に置き換える
+" set expandtab " タブ入力を複数の空白入力に置き換える
 set tabstop=2 " 画面上でタブ文字が占める幅
-set softtabstop=4 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
+" set softtabstop=4 " 連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
 set autoindent " 改行時に前の行のインデントを継続する
 set smartindent " 改行時に前の行の構文をチェックし次の行のインデントを増減する
 set shiftwidth=2 " smartindentで増減する幅
@@ -30,10 +32,33 @@ set ignorecase "検索パターンにおいて大文字と小文字を区別し�
 set smartcase "検索パターンが大文字を含んでいたらignorecaseを上書きする
 
 " ステータスライン
-set statusline=%f\ %n\ %m
+" Vimの改行コード表示がちと変わっているので、
+" 一般的な改行コードに変換してステータスバーに表示するようにカスタマイズ
+" 改行コード対応表
+" CRLF: dos
+" CR: unix
+" LF: mac
+:set list
+
+let dic_line = { 'dos': 'CRLF', 'unix': 'CR', 'mac': 'LF'}
+let f = &fileformat " 改行コード取得
+let s = ''
+
+if has_key(dic_line, f)
+    let s = dic_line[f]
+else
+    let s = 'unkwown'
+endif
+
+set statusline=%f\ %n\ %m\ [%{f}]
 set statusline+=%=
 set statusline+=[%l/%L][%{has('multi_byte')&&\&fileencoding!=''?&fileencoding:&encoding}]
 
 " encording 設定
 set encoding=utf-8
-set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
+set fileencodings=utf-8,cp932
+
+autocmd BufNewFile,BufRead *.PRC  set filetype=sql
+autocmd BufNewFile,BufRead *.UDF  set filetype=sql
+
+:set nofixeol
