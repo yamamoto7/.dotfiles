@@ -62,3 +62,9 @@ autocmd BufNewFile,BufRead *.PRC  set filetype=sql
 autocmd BufNewFile,BufRead *.UDF  set filetype=sql
 
 :set nofixeol
+
+" augroup vimrc-auto-cursorline
+  " autocmd!
+  " autocmd CursorMoved,CursorMovedI,WinLeave * setlocal nocursorline
+  " autocmd CursorHold,CursorHoldI * setlocal cursorline
+" augroup END

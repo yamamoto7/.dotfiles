@@ -35,7 +35,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'gorodinskiy/vim-coloresque'
 
   " editor色
-  Plug 'cocopon/iceberg.vim'
+  " Plug 'cocopon/iceberg.vim'
 
   " lsp
   Plug 'prabirshrestha/vim-lsp'
@@ -43,7 +43,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'dart-lang/dart-vim-plugin'
 	" ale
 	" Plug 'w0rp/ale'
-	Plug 'airblade/vim-gitgutter'
+	" Plug 'airblade/vim-gitgutter'
 
   Plug 'prabirshrestha/asyncomplete.vim'
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
