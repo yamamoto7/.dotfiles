@@ -1,16 +1,10 @@
-# 履歴検索ツールを起動する関数
 function search_history {
-    # Use fzf
-    # local query="$(HISTTIMEFORMAT= history | sed 's/^[ ]*[0-9]*[ ]*//' | fzf --query "$READLINE_LINE" --reverse --height=40% --tac)"
-    # Use peco
-    local query="$(HISTTIMEFORMAT= history | sed 's/^[ ]*[0-9]*[ ]*//' | peco)"
-    if [ -n "$query" ]; then
-        READLINE_LINE="$query"
-        READLINE_POINT=${#query}
-        history -s "$query"
-    fi
+  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
+  if [ -n "$selected" ]; then
+    READLINE_LINE="$selected"
+    READLINE_POINT=${#selected}
+    history -s "$selected"
+  fi
 }
-
-# Ctrl-Rを押した際に、履歴検索ツールを呼び出すようにキーバインドを設定する
 bind -x '"\C-r": search_history'
 
