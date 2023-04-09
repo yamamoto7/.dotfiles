@@ -64,5 +64,8 @@ return {
       { key = 'l', action = act.AdjustPaneSize {"Right", 1} },
       { key = 'Escape', action = 'PopKeyTable' },
     },
+    disable_default_assignments = {
+      { key = 'P', mods = 'CTRL|SHIFT', action = 'Nop' },
+    },
   },
 }

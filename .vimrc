@@ -29,32 +29,6 @@ noremap s <nop>
 
 map sfn :tabnext<CR>
 map sfp :tabprevious<CR>
-runtime! settings/init/*.vim
-runtime! settings/pluginconfig/*.vim
 
-" vue syntax highlight
-" autocmd FileType vue syntax sync fromstart
-" autocmd BufNewFile,BufRead *.jbuilder set filetype=ruby
-
-function! ProfileCursorMove() abort
-  let profile_file = expand('~/log/vim-profile.log')
-  if filereadable(profile_file)
-    call delete(profile_file)
-  endif
-
-  normal! gg
-  normal! zR
-
-  execute 'profile start ' . profile_file
-  profile func *
-  profile file *
-
-  augroup ProfileCursorMove
-    autocmd!
-    autocmd CursorHold <buffer> profile pause | q
-  augroup END
-
-  for i in range(100)
-    call feedkeys('j')
-  endfor
-endfunction
+" runtime! settings/init/*.vim
+" runtime! settings/pluginconfig/*.vim
