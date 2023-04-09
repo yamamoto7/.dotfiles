@@ -44,3 +44,5 @@ alias fceux='open -a fceux'
 
 # AWS switch profile
 alias awsp='export AWS_PROFILE=$(aws configure list-profiles | sed "/default/d" | sort | peco)'
+
+alias vim=nvim

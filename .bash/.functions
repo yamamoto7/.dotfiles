@@ -1,10 +1,24 @@
-function search_history {
-  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
+function search_history_x {
+  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | awk '!a[$0]++' | peco --query "$READLINE_LINE")
+
   if [ -n "$selected" ]; then
     READLINE_LINE="$selected"
     READLINE_POINT=${#selected}
     history -s "$selected"
   fi
 }
-bind -x '"\C-r": search_history'
+
+function search_history {
+  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
+  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | fzf --query="$READLINE_LINE")
+
+
+  if [ -n "$selected" ]; then
+    READLINE_LINE="$selected"
+    READLINE_POINT=${#selected}
+    history -s "$selected"
+  fi
+}
+
+bind -x '"\C-r": search_history_x'
 
