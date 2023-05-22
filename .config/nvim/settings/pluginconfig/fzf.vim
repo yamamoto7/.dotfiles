@@ -11,7 +11,7 @@ fun! FzfOmniFiles()
 endfun
 nnoremap <C-p> :call FzfOmniFiles()<CR>
 
-" Ctrl+gで文字列検索を開く
+" Ctrl+cで文字列検索を開く
 " <S-?>でプレビューを表示/非表示する
 command! -bang -nargs=* Rg
 \ call fzf#vim#grep(

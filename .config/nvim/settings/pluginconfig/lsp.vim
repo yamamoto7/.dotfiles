@@ -31,5 +31,6 @@
 " nmap sds :sp<cr>:LspDefinition<cr>
 " nmap sdi :vsp<cr>:LspDefinition<cr>
 
-nmap <buffer> sdd <Plug>(coc-definition)
+nmap <buffer> sdt <Plug>(coc-definition)
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 

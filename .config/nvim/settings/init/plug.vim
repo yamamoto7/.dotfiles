@@ -30,6 +30,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   " coc
   Plug 'neoclide/coc.nvim'
   Plug 'dense-analysis/ale'
+	Plug 'github/copilot.vim'
 
 	Plug 'lambdalisue/fern.vim'
 	Plug 'lambdalisue/nerdfont.vim'

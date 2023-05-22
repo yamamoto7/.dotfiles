@@ -60,6 +60,9 @@ function! s:init_fern() abort
   nmap <buffer> s <Plug>(fern-action-open:vsplit)<cr>
   nmap <buffer> gs <Plug>(fern-action-open:vsplit)<C-w>p
   nmap <buffer> ma <Plug>(fern-action-new-path)
+  nmap <buffer> mm <Plug>(fern-action-rename)
+  nmap <buffer> md <Plug>(fern-action-trash)
+  nmap <buffer> mc <Plug>(fern-action-copy)
   nmap <buffer> P gg
 
   nmap <buffer> C <Plug>(fern-action-enter)
