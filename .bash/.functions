@@ -1,4 +1,6 @@
-function search_history_x {
+function search_history {
+  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
+  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | fzf --query="$READLINE_LINE")
   local selected=$(HISTTIMEFORMAT= history | cut -c 8- | awk '!a[$0]++' | peco --query "$READLINE_LINE")
 
   if [ -n "$selected" ]; then
@@ -8,17 +10,35 @@ function search_history_x {
   fi
 }
 
-function search_history {
-  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
-  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | fzf --query="$READLINE_LINE")
-
-
-  if [ -n "$selected" ]; then
-    READLINE_LINE="$selected"
-    READLINE_POINT=${#selected}
-    history -s "$selected"
+function repo() {
+  if [ $# -eq 0 ]; then
+    tmp=`pwd`
+  else
+    tmp=$1
   fi
+  (
+    cd $tmp
+    repo_url=$(git remote -v | head -n 1 | awk '{
+      gsub("git@github.com:", "https://github.com/", $2)
+      print substr($2, 1, length($2) - 4)
+    }')
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+    full_url="${repo_url}/tree/${current_branch}"
+    open "${full_url}"
+  )
 }
 
-bind -x '"\C-r": search_history_x'
+function remove_duplicates() {
+  input_file=$1
+  output_file=$2
 
+  if [ -z "$input_file" ] || [ -z "$output_file" ]; then
+    echo "Usage: remove_duplicates input_file output_file"
+    return 1
+  fi
+
+  iconv -c -f UTF-8 -t UTF-8 "$input_file" > "$output_file"
+  awk '!seen[$0]++' "$output_file" > "$output_file"
+}
+
+bind -x '"\C-r": search_history'
