@@ -1,3 +1,4 @@
+exec $SHELL -l
 
 brew install neovim
 # in neovim :PlugInstall
@@ -10,4 +11,5 @@ anyenv install --init
 # anyenv install jenv
 # anyenv install phpenv
 
-
+brew install peco
+brew install bash-completion
