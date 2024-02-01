@@ -52,5 +52,11 @@ call plug#begin('~/.local/share/nvim/plugged')
   " Plug 'rcarriga/nvim-notify'
   " Plug 'nvim-treesitter/nvim-treesitter'
   " Plug 'folke/noice.nvim'
+
+	" Browser
+	Plug 'tyru/open-browser.vim'
+
+	" Markdown
+	Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 call plug#end()
 
