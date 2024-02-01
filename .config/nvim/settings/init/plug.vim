@@ -40,5 +40,14 @@ call plug#begin('~/.local/share/nvim/plugged')
 	" fzf
 	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 	Plug 'junegunn/fzf.vim'
+
+	" Browser
+	Plug 'tyru/open-browser.vim'
+
+	" Markdown
+	Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+
+
+	" If you have nodejs
 call plug#end()
 
