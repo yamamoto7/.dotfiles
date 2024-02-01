@@ -7,6 +7,7 @@ nnoremap sfu :Fern . -drawer -reveal=% -toggle<CR>
 let g:fern#default_hidden=1
 let g:fern#renderer = 'nerdfont'
 let g:fern#renderer_options = {'number': 0}
+let g:fern#default_exclude = '^\%(\.DS_Store\|\.byebug\)$'
 
 function! s:init_fern() abort
     " nmap <buffer> v <Plug>(fern-action-open:side)

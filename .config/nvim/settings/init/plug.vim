@@ -30,24 +30,33 @@ call plug#begin('~/.local/share/nvim/plugged')
   " coc
   Plug 'neoclide/coc.nvim'
   Plug 'dense-analysis/ale'
-	Plug 'github/copilot.vim'
+  Plug 'github/copilot.vim'
 
-	Plug 'lambdalisue/fern.vim'
-	Plug 'lambdalisue/nerdfont.vim'
-	Plug 'lambdalisue/fern-renderer-nerdfont.vim'
-	Plug 'lambdalisue/glyph-palette.vim'
+  Plug 'lambdalisue/fern.vim'
+  Plug 'lambdalisue/nerdfont.vim'
+  Plug 'lambdalisue/fern-renderer-nerdfont.vim'
+  Plug 'lambdalisue/glyph-palette.vim'
 
-	" fzf
-	Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-	Plug 'junegunn/fzf.vim'
+  " ale
+  Plug 'dense-analysis/ale'
+
+  " fzf
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  " Plug 'junegunn/fzf.vim'
+
+  Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
+  Plug 'nvim-tree/nvim-web-devicons'
+
+  " notice
+  " Plug 'MunifTanjim/nui.nvim'
+  " Plug 'rcarriga/nvim-notify'
+  " Plug 'nvim-treesitter/nvim-treesitter'
+  " Plug 'folke/noice.nvim'
 
 	" Browser
 	Plug 'tyru/open-browser.vim'
 
 	" Markdown
 	Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
-
-
-	" If you have nodejs
 call plug#end()
 
