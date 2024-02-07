@@ -1,4 +1,6 @@
-exec $SHELL -l
+#!/bin/bash
+
+# exec $SHELL -l
 
 brew install neovim
 # in neovim :PlugInstall

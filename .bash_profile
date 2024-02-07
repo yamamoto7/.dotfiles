@@ -7,3 +7,5 @@ done;
 source /usr/local/etc/bash_completion.d/git-prompt.sh
 source /usr/local/etc/bash_completion.d/git-completion.bash
 shopt -u histappend
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
