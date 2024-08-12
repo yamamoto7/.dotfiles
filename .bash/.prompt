@@ -112,7 +112,9 @@ fi;
 # PS1+="\[${white}\] at ";
 # PS1+="\[${hostStyle}\]\h"; # host
 # PS1+="\[${white}\] in ";
-PS1="\[${blue}\]\W"; # working directory full path
+# time="\[\033[0;32m\]\A"
+PS1="\[${white}\]\$(date +'%H:%M') ";
+PS1+="\[${blue}\]\W";
 PS1+="\$(prompt_git \"\[${white}\] - \[${yellow}\]\" \"\[${white}\]\")"; # Git repository details
 # PS1+="\n";
 PS1+="\[${white}\] \$ \[${reset}\]"; # `$` (and reset color)

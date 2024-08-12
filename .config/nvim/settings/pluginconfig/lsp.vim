@@ -31,12 +31,12 @@
 " nmap sds :sp<cr>:LspDefinition<cr>
 " nmap sdi :vsp<cr>:LspDefinition<cr>
 
-nmap  sdt (coc-definition)
+" nmap  sdt (coc-definition)
 " nmap <buffer> sdt <Plug>(coc-definition)
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 
-let g:ale_disable_lsp = 1
-let g:ale_lint_on_text_changed = 1
+" let g:ale_disable_lsp = 1
+" let g:ale_lint_on_text_changed = 1
 
 
 
