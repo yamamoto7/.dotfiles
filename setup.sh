@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOTFILES_DIR="."
-DOTFILES=(".bash" ".bashrc" ".bash_profile" ".config/nvim" ".gitconfig" "gitignore_global" ".vimrc" ".wezterm.lua" ".inputrc")
+DOTFILES=(".bash" ".bashrc" ".bash_profile" ".config/nvim" ".config/git" ".gitconfig" "gitignore_global" ".vimrc" ".wezterm.lua" ".inputrc")
 
 function check_file_exists() {
     for file in "${DOTFILES[@]}"; do
