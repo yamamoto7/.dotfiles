@@ -5,11 +5,31 @@ local function on_attach(_, _)
     highlight! DiagnosticLineNrWarn guibg=#3b2f1e guifg=#a16b1d gui=bold
     highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#1cbaba gui=bold
     highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#195dd1 gui=bold
-    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
-    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
-    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
-    ]])
+    sign define DiagnosticSignError text=a texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+    sign define DiagnosticSignWarn text=b texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
+    sign define DiagnosticSignInfo text=c texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
+    sign define DiagnosticSignHint text=d texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
+  ]])
+
+  -- Diagnosticの設定
+  vim.diagnostic.config({
+    virtual_text = {
+      prefix = 'x', -- または "▎" など
+      spacing = 4,
+    },
+    signs = true,
+    update_in_insert = false,
+    underline = true,
+    severity_sort = true,
+    float = {
+      focusable = false,
+      style = "minimal",
+      border = "rounded",
+      source = "always",
+      header = "",
+      prefix = "",
+    },
+  })
 end
 -- configs for manually installed servers --
 require("lspconfig").metals.setup({
@@ -91,11 +111,11 @@ require("lspsaga").setup({
 		devicon = true,
 		foldericon = true,
 		title = true,
-		expand = "",
-		collapse = "",
+		expand = ">",
+		collapse = "v",
 		code_action = "💡",
 		actionfix = " ",
-		lines = { "┗", "┣", "┃", "━", "┏" },
+    lines = { "+", "+", "|", "-", "+" },
 		kind = nil,
 		imp_sign = "󰳛 ",
 	},

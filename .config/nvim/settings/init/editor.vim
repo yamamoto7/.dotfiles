@@ -58,8 +58,11 @@ set statusline+=[%l/%L][%{has('multi_byte')&&\&fileencoding!=''?&fileencoding:&e
 set encoding=utf-8
 set fileencodings=utf-8,cp932
 
+" Filetypes
 autocmd BufNewFile,BufRead *.PRC  set filetype=sql
 autocmd BufNewFile,BufRead *.UDF  set filetype=sql
+autocmd BufRead,BufNewFile *.ts set filetype=typescript
+
 
 :set nofixeol
 

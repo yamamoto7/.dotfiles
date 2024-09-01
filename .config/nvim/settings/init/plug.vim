@@ -1,6 +1,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
   " 自動補完
-  Plug 'Shougo/pum.vim'
+  " Plug 'Shougo/pum.vim'
 
   " マルチプルカーソル
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -39,10 +39,6 @@ call plug#begin('~/.local/share/nvim/plugged')
   
   " バッファ管理
   Plug 'jeetsukumaran/vim-buffergator'
-
-  " coc
-  " Plug 'neoclide/coc.nvim'
-  " Plug 'dense-analysis/ale'
 
   " GitHub Copilot
   " Plug 'github/copilot.vim'
