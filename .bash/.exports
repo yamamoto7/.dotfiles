@@ -15,6 +15,7 @@ export PATH="$HOME/flutter/bin:$PATH"
 # export PATH="/opt/homebrew/bin:$PATH" 
 eval "$(anyenv init - bash)"
 
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # enable GPG signing
 # export GPG_TTY=$(tty)
