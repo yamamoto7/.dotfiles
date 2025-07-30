@@ -5,7 +5,7 @@ return {
   font = wezterm.font_with_fallback {
     {
       family = 'JetBrains Mono',
-      weight = 'Medium',
+      weight = 'Bold',
       harfbuzz_features = { 'calt=0', 'clig=1', 'liga=1' },
     },
     { family = 'Terminus', weight = 'Bold' },
@@ -19,6 +19,7 @@ return {
     { key = "k", mods = "ALT", action = act({ SpawnTab = "CurrentPaneDomain" }) },
     { key = 'j', mods = 'CTRL', action = act.ActivateKeyTable { name = 'after_ctrl_j', one_shot = true } },
     { key = 'm', mods = 'CMD', action = 'DisableDefaultAssignment' },
+    { key = "¥", action = wezterm.action({ SendString = "\\" }) },
     {
       -- key = 'LeftArrow',
       key = 'h',
