@@ -3,6 +3,7 @@
 # Make vim the default editor.
 export EDITOR='vim';
 export PATH="$HOME/flutter/bin:$PATH"
+export PATH="$HOME/.pub-cache/bin:$PATH"
 
 # export PATH=${PATH}:${HOME}/.anyenv/envs/nodenv/bin
 # Customize to your needs...
@@ -19,3 +20,8 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # enable GPG signing
 # export GPG_TTY=$(tty)
+
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/mysql-client/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/mysql-client/include"
+export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix zstd)/lib/

@@ -41,4 +41,148 @@ function remove_duplicates() {
   awk '!seen[$0]++' "$output_file" > "$output_file"
 }
 
+# -y で確認なしコミット
+function commit_with_message() {
+  local auto="no"
+  while getopts ":y" opt; do
+    case "$opt" in
+      y) auto="yes" ;;
+    esac
+  done
+  shift $((OPTIND-1))
+
+  if git diff --staged --quiet; then
+    echo "ステージングされた変更がありません"; return 1
+  fi
+
+  # 依存 CLI の確認（claude CLI を想定）
+  if ! command -v claude >/dev/null 2>&1; then
+    echo "claude CLI が見つかりません。インストールまたは PATH 設定を確認してください。"
+    return 1
+  fi
+
+  # リポジトリ情報
+  local repo branch toplevel
+  repo="$(basename "$(git rev-parse --show-toplevel)")"
+  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
+  toplevel="$(git rev-parse --show-toplevel)"
+
+  # 変更の要約と差分
+  local names numstat diff scope_hint
+  names="$(git diff --staged --name-status --no-color)"
+  numstat="$(git diff --staged --numstat --no-color)"
+
+  # scope ヒント（最初の変更ファイルのトップレベルディレクトリ）
+  scope_hint="$(printf '%s\n' "$numstat" | awk 'NR==1{print $3}' | cut -d/ -f1)"
+  [ -z "$scope_hint" ] && scope_hint="$repo"
+
+  # フル差分（長い場合は U=0 + トリム）
+  diff="$(git diff --staged --no-color)"
+  local MAX_DIFF_CHARS=80000
+  if [ ${#diff} -gt $MAX_DIFF_CHARS ]; then
+    # 文脈なし差分に切替
+    diff="$(git diff --staged --no-color -U0)"
+    # それでも長ければ頭だけ残す
+    if [ ${#diff} -gt $MAX_DIFF_CHARS ]; then
+      diff="${diff:0:$MAX_DIFF_CHARS}
+... [TRUNCATED: original staged diff exceeded ${MAX_DIFF_CHARS} chars] ..."
+    fi
+  fi
+
+  # 絵文字タイプを使うか（commitlint 併用なら 0 推奨）
+  local USE_EMOJI_TYPES=${USE_EMOJI_TYPES:-1}
+
+  # プロンプト生成
+  local guidelines type_hint
+  if [ "$USE_EMOJI_TYPES" = "1" ]; then
+    type_hint="Allowed <type>: \`✨ feat:\`, \`🐛 fix:\`, \`📝 docs:\`, \`🎨 style:\`, \`♻️ refactor:\`, \`⚡️ perf:\`, \`✅ test:\`, \`🏗️ build:\`, \`👷 ci:\`, \`🔧 chore:\`, \`⏪ revert:\`."
+  else
+    type_hint="Allowed <type>: \`feat\`, \`fix\`, \`docs\`, \`style\`, \`refactor\`, \`perf\`, \`test\`, \`build\`, \`ci\`, \`chore\`, \`revert\`."
+  fi
+
+  guidelines="$(printf '%s\n' \
+"You are writing a Conventional Commits message in ENGLISH from the staged git diff.
+Context:
+- repo: $repo
+- branch: $branch
+- likely scope hint: $scope_hint
+
+Requirements:
+- Output a complete commit message: one-line header, then a blank line, then a multi-line body if useful.
+- The header MUST be: <type>(<scope>)!: <subject>  (no space before the colon; include ! only when breaking).
+- $type_hint
+- Keep subject ≤ 72 chars, imperative, no trailing period.
+- Body explains WHAT and WHY (not low-level HOW), wrap at ~72 chars/line.
+- If breaking, add a \`BREAKING CHANGE:\` section in the body.
+- If relevant, add references like \`Refs: #123\` on separate lines at the end.
+- DO NOT return code fences or extra commentary — only the commit text.
+- Do NOT add any footer/signature lines or any "Co-Authored-By" trailers.
+
+Changed files (name-status):
+$names
+
+Numstat (added<TAB>deleted<TAB>file):
+$numstat
+
+---DIFF---
+$diff
+")"
+
+  # 生成実行（stdout のコードフェンス/末尾空白/CR を除去）
+  local msg
+  msg="$(
+    claude -p "$guidelines" --output-format text --model sonnet 2>/dev/null \
+    | sed -e '1{/^```/d;}' -e '${/^```/d;}' -e 's/[[:space:]]\+$//' -e 's/\r$//'
+  )"
+  local exit_code=$?
+
+  if [ $exit_code -ne 0 ] || [ -z "$msg" ] || [ "$msg" = "null" ]; then
+    echo "メッセージ生成に失敗しました (exit=$exit_code)"; return 1
+  fi
+
+  # テンポラリファイルに保存（編集可能にする）
+  local tmpfile
+  tmpfile="$(mktemp -t ai-commit.XXXXXX)"
+  printf '%s\n' "$msg" >"$tmpfile"
+
+  # プレビュー
+  echo "----- commit preview -----"
+  cat "$tmpfile"
+  echo "--------------------------"
+
+  # 72 文字超過の軽い警告（ヘッダのみ）
+  local header
+  header="$(head -n1 "$tmpfile")"
+  if [ "${#header}" -gt 72 ]; then
+    echo "⚠️  ヘッダが 72 文字を超えています (${#header} chars)"
+  fi
+
+  if [ "$auto" = "yes" ]; then
+    git commit -F "$tmpfile"
+    local res=$?
+    rm -f "$tmpfile"
+    return $res
+  fi
+
+  # 編集 or 即コミット
+  echo -n "このメッセージでコミットしますか？ [y=コミット / e=編集してから / N=中止] "
+  read -r ans
+  case "$ans" in
+    y|Y|yes|YES)
+      git commit -F "$tmpfile"
+      ;;
+    e|E|edit|EDIT)
+      "${GIT_EDITOR:-${EDITOR:-vi}}" "$tmpfile"
+      echo -n "編集後のメッセージでコミットします。よろしいですか？ [y/N] "
+      read -r ans2
+      case "$ans2" in
+        y|Y|yes|YES) git commit -F "$tmpfile" ;;
+        *) echo "中止しました" ;;
+      esac
+      ;;
+    *) echo "中止しました" ;;
+  esac
+  rm -f "$tmpfile"
+}
+
 bind -x '"\C-r": search_history'

@@ -10,4 +10,10 @@ source ~/.bash/.git-prompt.sh
 source ~/.bash/.git-completion.sh
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 shopt -u histappend
-. "$HOME/.cargo/env"
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[ -f /Users/kenta.yamamoto/.dart-cli-completion/bash-config.bash ] && . /Users/kenta.yamamoto/.dart-cli-completion/bash-config.bash || true
+## [/Completion]
+
+. "$HOME/.local/bin/env"

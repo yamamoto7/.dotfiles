@@ -40,6 +40,8 @@ alias l='git log --pretty=oneline -n 20 --graph --abbrev-commit'
 alias gg='git grep'
 alias t='tig'
 
+alias giti='commit_with_message'
+
 alias fceux='open -a fceux'
 
 # AWS switch profile
