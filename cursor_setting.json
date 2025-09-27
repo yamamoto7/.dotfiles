@@ -1,0 +1,148 @@
+// Place your key bindings in this file to override the defaults
+[
+  // --- 左：ファイルツリー ---
+  {
+    "key": "ctrl+shift+h",
+    "command": "workbench.view.explorer",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "filesExplorerFocus"
+  },
+  {
+    "key": "ctrl+shift+h",
+    "command": "workbench.action.closeSidebar",
+    "when": "filesExplorerFocus"
+  },
+  
+  // --- 左:ファイルツリー操作 ---
+  {
+    "key": "enter",
+    "command": "-renameFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "enter",
+    "command": "list.select",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "q",
+    "command": "list.collapse",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inpuewtFocus"
+  },
+  {
+    "key": "m d",
+    "command": "deleteFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
+  },
+  {
+    "key": "m m",
+    "command": "renameFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "m a",
+    "command": "explorer.newFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  
+  
+  // --- 右：Chat UI ---
+  {
+    "key": "ctrl+shift+l",
+    "command": "composer.startComposerPrompt",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+h",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "auxiliaryBarFocus"
+  }, 
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.toggleAuxiliaryBar",
+    "when": "auxiliaryBarFocus"
+  },
+  // --- 右：Chat UI操作 ---
+  {
+    "key": "ctrl+shift+p",
+    "command": "composer.previousChatTab",
+    "when": "auxiliaryBarFocus"
+  },
+  {
+    "key": "ctrl+shift+n",
+    "command": "composer.nextChatTab",
+    "when": "auxiliaryBarFocus"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "composer.closeComposerTab",
+    "when": "auxiliaryBarFocus"
+  },
+  {
+    "key": "cmd+shift+u",
+    "command": "cursor-ai",
+    "args": {
+      "prompt": "次の PR 本文の auto-summary 部分を、このリポジトリ全体のコードインデックスと変更差分を元に更新してください。PR 本文の他の部分は壊さないでください。",
+      "inputFiles": ["pr_body.md", "changes.diff"],
+      "outputFile": "pr_body.md",
+      "postCommand": "gh pr edit <PR番号> --body-file pr_body.md"
+    }
+  },
+  // --- 下：ターミナル ---
+  {
+    "key": "ctrl+shift+j",
+    "command": "workbench.action.terminal.focus",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+k",
+    "command": "workbench.action.focusActiveEditorGroup"
+  },
+  {
+    "key": "ctrl+shift+j",
+    "command": "workbench.action.closePanel",
+    "when": "terminalFocus"
+  },
+  // --- 下:ターミナル 操作 ---
+  {
+    "key": "ctrl+shift+n",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+p",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+l",
+    "command": "workbench.action.terminal.focusNextPane",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+h",
+    "command": "workbench.action.terminal.focusPreviousPane",
+    "when": "terminalFocus"
+  },
+  { "key": "ctrl+k", "command": "workbench.action.terminal.scrollUp",    "when": "terminalFocus" },
+  { "key": "ctrl+j", "command": "workbench.action.terminal.scrollDown", "when": "terminalFocus" },
+  { "key": "ctrl+cmd+k", "command": "workbench.action.terminal.scrollUpPage",    "when": "terminalFocus" },
+  {
+    "key": "ctrl+cmd+j",
+    "command": "workbench.action.terminal.scrollDownPage",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+u",
+    "command": "composerMode.7fb95c98-eb27-4cd9-82e6-50ec549c5644"
+  },
+  {
+    "key": "cmd+r",
+    "command": "-workbench.action.terminal.chat.rerunRequest",
+    "when": "chatIsEnabled && terminalChatFocus && terminalHasBeenCreated && !terminalChatActiveRequest || chatIsEnabled && terminalChatFocus && terminalProcessSupported && !terminalChatActiveRequest"
+  },
+]
