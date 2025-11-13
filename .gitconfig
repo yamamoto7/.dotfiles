@@ -11,7 +11,6 @@
 
 [core]
   excludesfile = ~/.gitignore_global
-  hooksPath = ~/.config/git/hooks
 
 [merge]
   ff = false
@@ -95,11 +94,16 @@
 
 [diff "mixed"]
   textconv = nkf -w8
+
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path = 
+
 [mergetool "sourcetree"]
   cmd = /Users/kenta.yamamoto/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
   trustExitCode = true
+
 [push]
   autoSetupRemote = true
+[checkout]
+  defaultRemote = origin

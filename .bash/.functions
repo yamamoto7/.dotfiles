@@ -10,6 +10,32 @@ function search_history {
   fi
 }
 
+gset() {
+  command -v gcloud >/dev/null 2>&1 || { echo "gcloud が見つかりません"; return 1; }
+  command -v peco   >/dev/null 2>&1 || { echo "peco が見つかりません";   return 1; }
+
+  # projects を「id name number」の1行形式で取得（先頭トークンが必ず projectId）
+  local choice id
+  choice="$(
+    gcloud projects list --format='value(projectId,name,projectNumber)' \
+    | awk '{id=$1; $1=""; printf "%s  %s\n", id, substr($0,2)}' \
+    | peco --prompt 'GCP project > '
+  )" || return 1
+
+  [ -z "$choice" ] && { echo "キャンセルしました"; return 1; }
+
+  # 先頭の“空白まで”を projectId として抜き出す（タブ/複数スペースどちらでもOK）
+  id="${choice%%[[:space:]]*}"
+
+  echo "→ gcloud config set project $id"
+  gcloud config set project "$id" --quiet || return 1
+
+  # ADC の quota project も合わせて更新（警告対策）
+  gcloud auth application-default set-quota-project "$id" --quiet >/dev/null 2>&1 || true
+
+  echo "現在の project: $(gcloud config get-value project)"
+}
+
 function repo() {
   if [ $# -eq 0 ]; then
     tmp=`pwd`
