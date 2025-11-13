@@ -13,6 +13,7 @@ return {
   },
   -- color_scheme = 'Batman',
   keys = {
+
     -- CTRL | SHIFT + TAB -> ActiveTab = -1
     -- CTRL | SHIFT + R -> Reload config
     -- CTRL | SHIFT -> 
@@ -44,6 +45,16 @@ return {
       mods = 'CTRL|SHIFT',
       action = act.ActivatePaneDirection 'Down',
     },
+    {
+      key = "p",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.ActivateTabRelative(-1),
+    },
+    {
+      key = "n",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.ActivateTabRelative(1),
+    },
   },
   key_tables = {
     after_ctrl_j = {
@@ -64,9 +75,6 @@ return {
       { key = 'k', action = act.AdjustPaneSize {"Up", 1} },
       { key = 'l', action = act.AdjustPaneSize {"Right", 1} },
       { key = 'Escape', action = 'PopKeyTable' },
-    },
-    disable_default_assignments = {
-      { key = 'P', mods = 'CTRL|SHIFT', action = 'Nop' },
     },
   },
 }
