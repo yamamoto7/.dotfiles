@@ -1,0 +1,61 @@
+{
+    "mcpServers": {
+        "figma-developer-mcp": {
+            "command": "/path/to/npx",
+            "args": [
+                "-y",
+                "figma-developer-mcp",
+                "--stdio"
+            ],
+            "env": {
+                "FIGMA_API_KEY": "FIGMA_API_KEY"
+            }
+        },
+        "filesystem": {
+            "command": "/path/to/bun",
+            "args": [
+                "run",
+                "/path/to/claude-ts-mcps/src/filesystem.ts",
+                "/path/to/allowed/directory"
+            ]
+        },
+        "git": {
+            "command": "/path/to/bun",
+            "args": [
+                "run",
+                "/path/to/claude-ts-mcps/src/git.ts"
+            ]
+        },
+        "github": {
+            "command": "/path/to/npx",
+            "args": [
+                "@modelcontextprotocol/server-github"
+            ],
+            "env": {
+                "GITHUB_TOKEN": "ghp_xxxxxxxxxxxxxxxxx"
+            }
+        },
+        "shell": {
+            "command": "/path/to/bun",
+            "args": [
+                "run",
+                "/path/to/claude-ts-mcps/src/shell.ts"
+            ]
+        },
+        "playwright": {
+            "command": "/path/to/npx",
+            "args": [
+                "@playwright/mcp@latest"
+            ]
+        },
+        "terraform": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "--rm",
+                "hashicorp/terraform-mcp-server"
+            ]
+        }
+    }
+}
