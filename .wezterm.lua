@@ -11,6 +11,7 @@ return {
     { family = 'Terminus', weight = 'Bold' },
     'Noto Color Emoji',
   },
+  audible_bell = "Disabled",
   -- color_scheme = 'Batman',
   keys = {
 
