@@ -1,0 +1,39 @@
+# Font settings
+font-family = Menlo
+font-family = BIZ UDGothic
+font-size = 14
+
+# Window settings
+window-padding-x = 4
+window-padding-y = 4
+
+# Theme (uncomment to use)
+theme = Dark Modern
+
+# Keybindings
+# Panels
+keybind = ctrl+j>s=new_split:right
+keybind = ctrl+j>t=new_split:down
+keybind = ctrl+shift+t=new_tab
+
+# Navigate panes: Ctrl+Shift+H/J/K/L
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+l=goto_split:right
+keybind = ctrl+shift+k=goto_split:up
+keybind = ctrl+shift+j=goto_split:down
+
+# Navigate tabs: Ctrl+Shift+P/N
+keybind = ctrl+shift+p=previous_tab
+keybind = ctrl+shift+n=next_tab
+
+# Disable Cmd+M (minimize)
+keybind = cmd+m=unbind
+
+# Send backslash for ¥ key (macOS Japanese keyboard)
+# keybind = ¥=text:\\
+
+# または、カスタムの不透明度を設定（例：0.85）
+unfocused-split-opacity = 0.95
+
+# 暗くする色をカスタマイズ
+unfocused-split-fill = #3a3a3a

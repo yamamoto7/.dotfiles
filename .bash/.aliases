@@ -1,50 +1,127 @@
 #!/usr/bin/env bash
 
-# Easier navigation: .., ..., ...., ....., ~ and -
+# ============================================
+# Navigation
+# ============================================
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias -- -="cd -"
 
-# Detect which `ls` flavor is in use
-if ls --color > /dev/null 2>&1; then # GNU `ls`
-	colorflag="--color"
-	export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
-else # macOS `ls`
-	colorflag="-G"
-	export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
+# ============================================
+# Modern ls with eza (if available)
+# ============================================
+if command -v eza &> /dev/null; then
+    alias ls='eza --icons --group-directories-first'
+    alias ll='eza -l --icons --group-directories-first --git'
+    alias la='eza -la --icons --group-directories-first --git'
+    alias lsd='eza -D --icons'
+    alias tree='eza --tree --icons --level=3'
+    alias lt='eza --tree --icons --level=2'
+else
+    # Fallback to standard ls
+    if ls --color > /dev/null 2>&1; then # GNU `ls`
+        colorflag="--color"
+        export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+    else # macOS `ls`
+        colorflag="-G"
+        export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
+    fi
+    alias ll="ls -lF ${colorflag}"
+    alias la="ls -lAF ${colorflag}"
+    alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+    alias ls="command ls ${colorflag}"
 fi
 
-# List all files colorized in long format
-alias ll="ls -lF ${colorflag}"
+# ============================================
+# Modern cat with bat (if available)
+# ============================================
+if command -v bat &> /dev/null; then
+    alias cat='bat --paging=never'
+    alias catp='bat'  # with paging
+fi
 
-# List all files colorized in long format, excluding . and ..
-alias la="ls -lAF ${colorflag}"
+# ============================================
+# Modern diff with delta (if available)
+# ============================================
+if command -v delta &> /dev/null; then
+    alias diff='delta'
+fi
 
-# List only directories
-alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+# ============================================
+# Modern top with btop (if available)
+# ============================================
+if command -v btop &> /dev/null; then
+    alias top='btop'
+fi
 
-# Always use color output for `ls`
-alias ls="command ls ${colorflag}"
+# ============================================
+# Modern du with dust (if available)
+# ============================================
+if command -v dust &> /dev/null; then
+    alias du='dust'
+fi
 
-# Always enable colored `grep` output
-# Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
+# ============================================
+# Modern find with fd (if available)
+# ============================================
+if command -v fd &> /dev/null; then
+    alias find='fd'
+fi
+
+# ============================================
+# Grep with color
+# ============================================
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# ============================================
+# ripgrep
+# ============================================
+if command -v rg &> /dev/null; then
+    alias rg='rg --smart-case'
+fi
+
+# ============================================
 # Git aliases
+# ============================================
 alias s='git status -s'
 alias l='git log --pretty=oneline -n 20 --graph --abbrev-commit'
 alias gg='git grep'
-alias t='tig'
-
+alias t='lazygit'
 alias giti='commit_with_message'
 
-alias fceux='open -a fceux'
+# ============================================
+# Docker aliases
+# ============================================
+alias d='docker'
+alias dc='docker compose'
+alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dimg='docker images'
+alias drm='docker rm'
+alias drmi='docker rmi'
+alias dprune='docker system prune -af'
 
-# AWS switch profile
-alias awsp='export AWS_PROFILE=$(aws configure list-profiles | sed "/default/d" | sort | peco)'
+# ============================================
+# AWS profile switcher
+# ============================================
+alias awsp='export AWS_PROFILE=$(aws configure list-profiles | sed "/default/d" | sort | fzf --height=40% --layout=reverse --border)'
 
+# ============================================
+# Editor
+# ============================================
 alias vim=nvim
+
+# ============================================
+# Network
+# ============================================
+alias myip='curl -s ifconfig.me'
+alias localip="ipconfig getifaddr en0"
+alias ports='netstat -tulanp 2>/dev/null || lsof -iTCP -sTCP:LISTEN -P'
+
+# ============================================
+# Others
+# ============================================
+alias fceux='open -a fceux'

@@ -1,8 +1,17 @@
-function search_history {
-  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | peco --query "$READLINE_LINE")
-  # local selected=$(HISTTIMEFORMAT= history | cut -c 8- | fzf --query="$READLINE_LINE")
-  local selected=$(HISTTIMEFORMAT= history | cut -c 8- | awk '!a[$0]++' | peco --query "$READLINE_LINE")
+#!/usr/bin/env bash
 
+# ============================================
+# History Search with fzf
+# ============================================
+function search_history {
+  local selected
+  selected=$(HISTTIMEFORMAT= history | cut -c 8- | awk '!a[$0]++' | \
+    fzf --tac --no-sort --query "$READLINE_LINE" \
+        --height=40% \
+        --layout=reverse \
+        --border \
+        --preview-window=hidden \
+        --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+abort')
   if [ -n "$selected" ]; then
     READLINE_LINE="$selected"
     READLINE_POINT=${#selected}
@@ -10,32 +19,35 @@ function search_history {
   fi
 }
 
+# ============================================
+# GCP Project Switcher
+# ============================================
 gset() {
   command -v gcloud >/dev/null 2>&1 || { echo "gcloud が見つかりません"; return 1; }
-  command -v peco   >/dev/null 2>&1 || { echo "peco が見つかりません";   return 1; }
+  command -v fzf    >/dev/null 2>&1 || { echo "fzf が見つかりません";   return 1; }
 
-  # projects を「id name number」の1行形式で取得（先頭トークンが必ず projectId）
   local choice id
   choice="$(
     gcloud projects list --format='value(projectId,name,projectNumber)' \
     | awk '{id=$1; $1=""; printf "%s  %s\n", id, substr($0,2)}' \
-    | peco --prompt 'GCP project > '
+    | fzf --prompt 'GCP project > ' --height=40% --layout=reverse --border
   )" || return 1
 
   [ -z "$choice" ] && { echo "キャンセルしました"; return 1; }
 
-  # 先頭の“空白まで”を projectId として抜き出す（タブ/複数スペースどちらでもOK）
   id="${choice%%[[:space:]]*}"
 
   echo "→ gcloud config set project $id"
   gcloud config set project "$id" --quiet || return 1
 
-  # ADC の quota project も合わせて更新（警告対策）
   gcloud auth application-default set-quota-project "$id" --quiet >/dev/null 2>&1 || true
 
   echo "現在の project: $(gcloud config get-value project)"
 }
 
+# ============================================
+# Open GitHub Repository
+# ============================================
 function repo() {
   if [ $# -eq 0 ]; then
     tmp=`pwd`
@@ -54,6 +66,9 @@ function repo() {
   )
 }
 
+# ============================================
+# Remove Duplicates from File
+# ============================================
 function remove_duplicates() {
   input_file=$1
   output_file=$2
@@ -67,7 +82,9 @@ function remove_duplicates() {
   awk '!seen[$0]++' "$output_file" > "$output_file"
 }
 
-# -y で確認なしコミット
+# ============================================
+# AI Commit Message Generator
+# ============================================
 function commit_with_message() {
   local auto="no"
   while getopts ":y" opt; do
@@ -81,44 +98,35 @@ function commit_with_message() {
     echo "ステージングされた変更がありません"; return 1
   fi
 
-  # 依存 CLI の確認（claude CLI を想定）
   if ! command -v claude >/dev/null 2>&1; then
     echo "claude CLI が見つかりません。インストールまたは PATH 設定を確認してください。"
     return 1
   fi
 
-  # リポジトリ情報
   local repo branch toplevel
   repo="$(basename "$(git rev-parse --show-toplevel)")"
   branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)"
   toplevel="$(git rev-parse --show-toplevel)"
 
-  # 変更の要約と差分
   local names numstat diff scope_hint
   names="$(git diff --staged --name-status --no-color)"
   numstat="$(git diff --staged --numstat --no-color)"
 
-  # scope ヒント（最初の変更ファイルのトップレベルディレクトリ）
   scope_hint="$(printf '%s\n' "$numstat" | awk 'NR==1{print $3}' | cut -d/ -f1)"
   [ -z "$scope_hint" ] && scope_hint="$repo"
 
-  # フル差分（長い場合は U=0 + トリム）
   diff="$(git diff --staged --no-color)"
   local MAX_DIFF_CHARS=80000
   if [ ${#diff} -gt $MAX_DIFF_CHARS ]; then
-    # 文脈なし差分に切替
     diff="$(git diff --staged --no-color -U0)"
-    # それでも長ければ頭だけ残す
     if [ ${#diff} -gt $MAX_DIFF_CHARS ]; then
       diff="${diff:0:$MAX_DIFF_CHARS}
 ... [TRUNCATED: original staged diff exceeded ${MAX_DIFF_CHARS} chars] ..."
     fi
   fi
 
-  # 絵文字タイプを使うか（commitlint 併用なら 0 推奨）
   local USE_EMOJI_TYPES=${USE_EMOJI_TYPES:-1}
 
-  # プロンプト生成
   local guidelines type_hint
   if [ "$USE_EMOJI_TYPES" = "1" ]; then
     type_hint="Allowed <type>: \`✨ feat:\`, \`🐛 fix:\`, \`📝 docs:\`, \`🎨 style:\`, \`♻️ refactor:\`, \`⚡️ perf:\`, \`✅ test:\`, \`🏗️ build:\`, \`👷 ci:\`, \`🔧 chore:\`, \`⏪ revert:\`."
@@ -142,7 +150,7 @@ Requirements:
 - If breaking, add a \`BREAKING CHANGE:\` section in the body.
 - If relevant, add references like \`Refs: #123\` on separate lines at the end.
 - DO NOT return code fences or extra commentary — only the commit text.
-- Do NOT add any footer/signature lines or any "Co-Authored-By" trailers.
+- Do NOT add any footer/signature lines or any \"Co-Authored-By\" trailers.
 
 Changed files (name-status):
 $names
@@ -154,7 +162,6 @@ $numstat
 $diff
 ")"
 
-  # 生成実行（stdout のコードフェンス/末尾空白/CR を除去）
   local msg
   msg="$(
     claude -p "$guidelines" --output-format text --model sonnet 2>/dev/null \
@@ -166,17 +173,14 @@ $diff
     echo "メッセージ生成に失敗しました (exit=$exit_code)"; return 1
   fi
 
-  # テンポラリファイルに保存（編集可能にする）
   local tmpfile
   tmpfile="$(mktemp -t ai-commit.XXXXXX)"
   printf '%s\n' "$msg" >"$tmpfile"
 
-  # プレビュー
   echo "----- commit preview -----"
   cat "$tmpfile"
   echo "--------------------------"
 
-  # 72 文字超過の軽い警告（ヘッダのみ）
   local header
   header="$(head -n1 "$tmpfile")"
   if [ "${#header}" -gt 72 ]; then
@@ -190,7 +194,6 @@ $diff
     return $res
   fi
 
-  # 編集 or 即コミット
   echo -n "このメッセージでコミットしますか？ [y=コミット / e=編集してから / N=中止] "
   read -r ans
   case "$ans" in
@@ -211,4 +214,75 @@ $diff
   rm -f "$tmpfile"
 }
 
+# ============================================
+# Git Branch Switcher with fzf
+# ============================================
+function gco() {
+  local branch
+  branch=$(git branch -a --format='%(refname:short)' | \
+    fzf --height=40% --layout=reverse --border --preview 'git log --oneline -10 {}')
+  if [ -n "$branch" ]; then
+    git checkout "$branch"
+  fi
+}
+
+# ============================================
+# fd + fzf file finder
+# ============================================
+function ff() {
+  local file
+  file=$(fd --type f --hidden --exclude .git | \
+    fzf --height=60% --layout=reverse --border \
+        --preview 'bat --color=always --style=numbers --line-range :200 {}')
+  if [ -n "$file" ]; then
+    ${EDITOR:-vim} "$file"
+  fi
+}
+
+# ============================================
+# fd + fzf directory changer
+# ============================================
+function cdf() {
+  local dir
+  dir=$(fd --type d --hidden --exclude .git | \
+    fzf --height=40% --layout=reverse --border \
+        --preview 'eza --tree --level=2 --icons {}')
+  if [ -n "$dir" ]; then
+    cd "$dir"
+  fi
+}
+
+# ============================================
+# Kill process with fzf
+# ============================================
+function fkill() {
+  local pid
+  pid=$(ps aux | sed 1d | fzf --height=40% --layout=reverse --border -m | awk '{print $2}')
+  if [ -n "$pid" ]; then
+    echo "$pid" | xargs kill -${1:-9}
+  fi
+}
+
+# ============================================
+# Docker container management with fzf
+# ============================================
+function dex() {
+  local container
+  container=$(docker ps --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | \
+    fzf --height=40% --layout=reverse --border | awk '{print $1}')
+  if [ -n "$container" ]; then
+    docker exec -it "$container" /bin/sh
+  fi
+}
+
+function dlog() {
+  local container
+  container=$(docker ps -a --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | \
+    fzf --height=40% --layout=reverse --border | awk '{print $1}')
+  if [ -n "$container" ]; then
+    docker logs -f "$container"
+  fi
+}
+
+# Bind Ctrl+R to fzf history search
 bind -x '"\C-r": search_history'
