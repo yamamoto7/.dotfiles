@@ -13,6 +13,11 @@ export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 
 # ============================================
+# Silence macOS bash deprecation warning
+# ============================================
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+# ============================================
 # fzf
 # ============================================
 export FZF_DEFAULT_OPTS='
@@ -40,21 +45,37 @@ fi
 export BAT_THEME="Monokai Extended"
 
 # ============================================
-# PATH additions
+# PATH additions (only add existing directories)
 # ============================================
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/flutter/bin:$PATH"
-export PATH="$HOME/.pub-cache/bin:$PATH"
+_add_to_path() {
+    [[ -d "$1" ]] && [[ ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"
+}
 
-# MySQL client
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-export LDFLAGS="-L/opt/homebrew/opt/mysql-client/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/mysql-client/include"
-export LIBRARY_PATH=$LIBRARY_PATH:$(brew --prefix zstd 2>/dev/null)/lib/
+_add_to_path "$HOME/bin"
+_add_to_path "$HOME/.local/bin"
+_add_to_path "$HOME/flutter/bin"
+_add_to_path "$HOME/.pub-cache/bin"
+
+export PATH
 
 # ============================================
-# mise (modern version manager - replaces anyenv/nodenv/pyenv)
+# MySQL client (Homebrew on Apple Silicon)
+# ============================================
+_mysql_prefix="/opt/homebrew/opt/mysql-client"
+if [[ -d "$_mysql_prefix" ]]; then
+    _add_to_path "$_mysql_prefix/bin"
+    export LDFLAGS="-L$_mysql_prefix/lib"
+    export CPPFLAGS="-I$_mysql_prefix/include"
+fi
+
+# zstd library path (cached to avoid slow brew --prefix on each shell startup)
+_zstd_lib="/opt/homebrew/opt/zstd/lib"
+[[ -d "$_zstd_lib" ]] && export LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$_zstd_lib"
+
+unset _mysql_prefix _zstd_lib
+
+# ============================================
+# mise (modern version manager)
 # ============================================
 if command -v mise &> /dev/null; then
     eval "$(mise activate bash)"
@@ -66,13 +87,3 @@ fi
 if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
 fi
-
-# ============================================
-# Silence macOS bash deprecation warning
-# ============================================
-export BASH_SILENCE_DEPRECATION_WARNING=1
-
-# ============================================
-# GPG (uncomment if needed)
-# ============================================
-# export GPG_TTY=$(tty)
