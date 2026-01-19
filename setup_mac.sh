@@ -41,29 +41,23 @@ ESSENTIALS=(
 # ============================================
 MODERN_CLI=(
     "fzf"               # Fuzzy finder
-    "eza"               # Modern ls
-    "bat"               # Modern cat with syntax highlighting
-    "fd"                # Modern find
-    "ripgrep"           # Modern grep (rg)
+    "eza"               # ls
+    "bat"               # cat with syntax highlighting
+    "fd"                # find
+    "ripgrep"           # grep (rg)
     "zoxide"            # Smart cd
     "delta"             # Better git diff
-    "btop"              # Modern top/htop
-    "dust"              # Modern du
-)
-
-# ============================================
-# Version managers
-# ============================================
-VERSION_MANAGERS=(
-    "mise"              # Universal version manager (replaces anyenv/nodenv/pyenv)
+    "btop"              # top/htop
+    "dust"              # du
 )
 
 # ============================================
 # Development tools
 # ============================================
 DEV_TOOLS=(
-    "lazygit"           # Git TUI
-    "lazydocker"        # Docker TUI
+    "mise"
+    "lazygit"
+    "lazydocker"
 )
 
 # ============================================
@@ -95,7 +89,6 @@ echo ""
 
 install_packages "Essential tools" "${ESSENTIALS[@]}"
 install_packages "Modern CLI tools" "${MODERN_CLI[@]}"
-install_packages "Version managers" "${VERSION_MANAGERS[@]}"
 install_packages "Development tools" "${DEV_TOOLS[@]}"
 
 # ============================================
@@ -132,28 +125,7 @@ echo "=========================================="
 echo -e "${GREEN}macOS Setup Complete!${NC}"
 echo "=========================================="
 echo ""
-echo "Installed tools:"
-echo "  Essential: bash, neovim, jq, gh"
-echo ""
-echo "  Modern CLI (with aliases):"
-echo "    eza     → ls, ll, la, tree"
-echo "    bat     → cat"
-echo "    fd      → find"
-echo "    fzf     → Ctrl+R history, gco, ff, cdf"
-echo "    zoxide  → z <dir>"
-echo "    ripgrep → rg"
-echo "    delta   → git diff"
-echo "    btop    → top"
-echo "    dust    → du"
-echo ""
-echo "  Version manager:"
-echo "    mise    → node, python, ruby, etc."
-echo "             Usage: mise use node@lts python@3.12"
-echo ""
-echo "  Dev tools:"
-echo "    lazygit, lazydocker"
-echo ""
 echo "Next steps:"
 echo "  1. Run: source ~/.bash_profile"
-echo "  2. (Optional) Switch to Bash 5: chsh -s /opt/homebrew/bin/bash"
+echo "  2. Switch to Bash 5: chsh -s /opt/homebrew/bin/bash"
 echo ""
