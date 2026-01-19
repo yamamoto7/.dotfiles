@@ -37,9 +37,9 @@ ESSENTIALS=(
 )
 
 # ============================================
-# Modern CLI replacements
+# Development tools
 # ============================================
-MODERN_CLI=(
+DEV_TOOLS=(
     "fzf"               # Fuzzy finder
     "eza"               # ls
     "bat"               # cat with syntax highlighting
@@ -49,15 +49,16 @@ MODERN_CLI=(
     "delta"             # Better git diff
     "btop"              # top/htop
     "dust"              # du
-)
-
-# ============================================
-# Development tools
-# ============================================
-DEV_TOOLS=(
     "mise"
     "lazygit"
     "lazydocker"
+)
+
+# ============================================
+# Cask applications (GUI apps)
+# ============================================
+CASK_APPS=(
+    "hammerspoon"       # macOS automation
 )
 
 # ============================================
@@ -88,8 +89,20 @@ print_status "Starting macOS setup..."
 echo ""
 
 install_packages "Essential tools" "${ESSENTIALS[@]}"
-install_packages "Modern CLI tools" "${MODERN_CLI[@]}"
 install_packages "Development tools" "${DEV_TOOLS[@]}"
+
+# Cask apps
+print_status "Installing Cask applications..."
+for app in "${CASK_APPS[@]}"; do
+    if brew list --cask "$app" &> /dev/null; then
+        print_success "$app already installed"
+    else
+        print_status "Installing $app..."
+        brew install --cask "$app"
+        print_success "$app installed"
+    fi
+done
+echo ""
 
 # ============================================
 # Post-install setup

@@ -19,6 +19,7 @@ DOTFILES=(
     ".wezterm.lua"
     ".inputrc"
     ".terraformrc"
+    ".hammerspoon/init.lua"
 )
 
 # Colors
