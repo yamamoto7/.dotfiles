@@ -87,3 +87,8 @@ fi
 if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
 fi
+
+# ============================================
+# GPG (uncomment if needed)
+# ============================================
+# export GPG_TTY=$(tty)
