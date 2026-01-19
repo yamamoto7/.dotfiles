@@ -40,6 +40,9 @@ call plug#begin('~/.local/share/nvim/plugged')
   " バッファ管理
   Plug 'jeetsukumaran/vim-buffergator'
 
+  " カラーテーマ
+  Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+
   " GitHub Copilot
   " Plug 'github/copilot.vim'
   Plug 'zbirenbaum/copilot.lua'

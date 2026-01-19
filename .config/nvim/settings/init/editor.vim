@@ -10,8 +10,6 @@ set number " 行番号を表示する
 " 色系
 syntax enable " シンタックスハイライトの有効化
 " set cursorline " カーソル行ハイライト
-colorscheme tender " カラーテーマ
-
 
 set scrolloff=5 " スクロールの余行設定
 

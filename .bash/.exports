@@ -37,7 +37,7 @@ fi
 # ============================================
 # bat (better cat)
 # ============================================
-export BAT_THEME="Tokyo Night"
+export BAT_THEME="Monokai Extended"
 
 # ============================================
 # PATH additions

@@ -6,7 +6,7 @@
 function search_history {
   local selected
   selected=$(HISTTIMEFORMAT= history | cut -c 8- | awk '!a[$0]++' | \
-    fzf --tac --no-sort --query "$READLINE_LINE" \
+    fzf --tac --query "$READLINE_LINE" \
         --height=40% \
         --layout=reverse \
         --border \
@@ -223,64 +223,6 @@ function gco() {
     fzf --height=40% --layout=reverse --border --preview 'git log --oneline -10 {}')
   if [ -n "$branch" ]; then
     git checkout "$branch"
-  fi
-}
-
-# ============================================
-# fd + fzf file finder
-# ============================================
-function ff() {
-  local file
-  file=$(fd --type f --hidden --exclude .git | \
-    fzf --height=60% --layout=reverse --border \
-        --preview 'bat --color=always --style=numbers --line-range :200 {}')
-  if [ -n "$file" ]; then
-    ${EDITOR:-vim} "$file"
-  fi
-}
-
-# ============================================
-# fd + fzf directory changer
-# ============================================
-function cdf() {
-  local dir
-  dir=$(fd --type d --hidden --exclude .git | \
-    fzf --height=40% --layout=reverse --border \
-        --preview 'eza --tree --level=2 --icons {}')
-  if [ -n "$dir" ]; then
-    cd "$dir"
-  fi
-}
-
-# ============================================
-# Kill process with fzf
-# ============================================
-function fkill() {
-  local pid
-  pid=$(ps aux | sed 1d | fzf --height=40% --layout=reverse --border -m | awk '{print $2}')
-  if [ -n "$pid" ]; then
-    echo "$pid" | xargs kill -${1:-9}
-  fi
-}
-
-# ============================================
-# Docker container management with fzf
-# ============================================
-function dex() {
-  local container
-  container=$(docker ps --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | \
-    fzf --height=40% --layout=reverse --border | awk '{print $1}')
-  if [ -n "$container" ]; then
-    docker exec -it "$container" /bin/sh
-  fi
-}
-
-function dlog() {
-  local container
-  container=$(docker ps -a --format '{{.Names}}\t{{.Image}}\t{{.Status}}' | \
-    fzf --height=40% --layout=reverse --border | awk '{print $1}')
-  if [ -n "$container" ]; then
-    docker logs -f "$container"
   fi
 }
 
