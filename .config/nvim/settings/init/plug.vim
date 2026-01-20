@@ -1,6 +1,4 @@
 call plug#begin('~/.local/share/nvim/plugged')
-  " 自動補完
-  " Plug 'Shougo/pum.vim'
 
   " マルチプルカーソル
   Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -21,15 +19,10 @@ call plug#begin('~/.local/share/nvim/plugged')
   " カラーコード可視化
   Plug 'gorodinskiy/vim-coloresque'
 
-  " LSP
-  " Plug 'prabirshrestha/asyncomplete.vim'
-  " Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
   Plug 'williamboman/mason.nvim'
   Plug 'https://github.com/neovim/nvim-lspconfig'
   Plug 'williamboman/mason-lspconfig.nvim'
   Plug 'nvimdev/lspsaga.nvim', { 'branch': 'main' }
-  Plug 'hrsh7th/cmp-nvim-lsp'
 
   " CMP
   Plug 'hrsh7th/cmp-nvim-lsp'
@@ -48,25 +41,15 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'zbirenbaum/copilot.lua'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'CopilotC-Nvim/CopilotChat.nvim'
-  Plug 'zbirenbaum/copilot-cmp'
+  " Plug 'zbirenbaum/copilot-cmp'
 
   Plug 'lambdalisue/fern.vim'
   Plug 'lambdalisue/nerdfont.vim'
   Plug 'lambdalisue/fern-renderer-nerdfont.vim'
   Plug 'lambdalisue/glyph-palette.vim'
 
-  " fzf
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-  " Plug 'junegunn/fzf.vim'
-
   Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
   Plug 'nvim-tree/nvim-web-devicons'
-
-  " notice
-  " Plug 'MunifTanjim/nui.nvim'
-  " Plug 'rcarriga/nvim-notify'
-  " Plug 'nvim-treesitter/nvim-treesitter'
-  " Plug 'folke/noice.nvim'
 
 	" Browser
 	Plug 'tyru/open-browser.vim'
