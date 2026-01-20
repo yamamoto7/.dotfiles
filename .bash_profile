@@ -1,10 +1,12 @@
 export PATH="$HOME/bin:$PATH";
 export PATH="/usr/local/bin:$PATH"
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
 for file in ~/.bash/.{path,prompt,config,exports,aliases,functions,locale}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
+
+# Load brew after mise so mise binaries take precedence
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source ~/.bash/.git-prompt.sh
 source ~/.bash/.git-completion.sh
@@ -23,3 +25,8 @@ if [ -f '/Users/kenta.yamamoto/Downloads/google-cloud-sdk/path.bash.inc' ]; then
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kenta.yamamoto/Downloads/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/kenta.yamamoto/Downloads/google-cloud-sdk/completion.bash.inc'; fi
+
+# Ensure mise shims take absolute precedence over all other binaries
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+    export PATH="$HOME/.local/share/mise/shims:$PATH"
+fi

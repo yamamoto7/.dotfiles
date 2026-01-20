@@ -47,7 +47,6 @@ DEV_TOOLS=(
     "ripgrep"           # grep (rg)
     "zoxide"            # Smart cd
     "delta"             # Better git diff
-    "btop"              # top/htop
     "dust"              # du
     "mise"
     "lazygit"
